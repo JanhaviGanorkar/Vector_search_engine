@@ -1,13 +1,17 @@
 const mongoose = require('mongoose');
 
 const DocumentSchema = new mongoose.Schema({
-  title: String,
-  content: String,
-  vector: [Number], // Store the TF-IDF vector
-  metadata: {
-    type: Map,
-    of: String,
-    default: {}
+  title: {
+    type: String,
+    required: true
+  },
+  content: {
+    type: String,
+    required: true
+  },
+  vector: {
+    type: [Number],
+    required: true
   },
   createdAt: {
     type: Date,

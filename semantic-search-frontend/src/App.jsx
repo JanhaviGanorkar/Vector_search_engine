@@ -6,7 +6,7 @@ import About from './pages/about'
 import Login from './pages/auth/login'
 import Register from './pages/auth/register'
 import Privacy from './pages/privacy'
-import { searchDocuments } from './lib/api'
+import { searchDocuments, addDocument } from './lib/api'
 import { Loader2 } from 'lucide-react'
 
 function App() {
@@ -21,14 +21,40 @@ function App() {
 
     setIsLoading(true)
     setError(null)
+    setResults([])
 
     try {
-      const searchResults = await searchDocuments(searchQuery)
-      setResults(searchResults)
+      const results = await searchDocuments(searchQuery)
+      if (results.length === 0) {
+        setError('No matching documents found')
+      } else {
+        setResults(results)
+      }
     } catch (err) {
-      setError('Failed to perform search. Please try again.')
+      setError('Search failed. Please try again.')
+      console.error(err)
     } finally {
       setIsLoading(false)
+    }
+  }
+
+  const handleDocumentUpload = async (e) => {
+    e.preventDefault()
+    const formData = new FormData(e.target)
+    const title = formData.get('title')
+    const content = formData.get('content')
+
+    if (!title.trim() || !content.trim()) {
+      alert('Both title and content are required')
+      return
+    }
+
+    try {
+      await addDocument(title, content)
+      e.target.reset()
+      alert('Document added successfully!')
+    } catch (err) {
+      alert('Failed to add document: ' + err.message)
     }
   }
 
@@ -48,9 +74,29 @@ function App() {
                   Vector Search Engine
                 </h1>
                 <p className="text-base sm:text-lg text-muted-foreground text-center max-w-[85%] sm:max-w-[75%] md:max-w-[65%] lg:max-w-2xl">
-                  A semantic search engine for finding relevant code snippets and documentation
+                  Upload documents and search through them using vector similarity
                 </p>
                 
+                {/* Upload Form */}
+                <form onSubmit={handleDocumentUpload} className="w-full max-w-lg space-y-4">
+                  <input
+                    type="text"
+                    name="title"
+                    placeholder="Document title"
+                    className="w-full h-12 px-4 rounded-lg border border-border bg-muted/50"
+                    required
+                  />
+                  <textarea
+                    name="content"
+                    placeholder="Document content"
+                    className="w-full h-32 px-4 py-2 rounded-lg border border-border bg-muted/50"
+                    required
+                  />
+                  <button type="submit" className="w-full h-12 rounded-lg bg-primary text-primary-foreground">
+                    Add Document
+                  </button>
+                </form>
+
                 {/* Search Form */}
                 <form onSubmit={handleSearch} className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mt-4">
                   <div className="relative">
