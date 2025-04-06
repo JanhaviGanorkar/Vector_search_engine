@@ -18,14 +18,52 @@ app.use((req, res, next) => {
 
 app.use(express.json());
 
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => {
-    console.log('MongoDB connected');
-  })
-  .catch(err => {
-    console.error('MongoDB connection error:', err.message);
+// MongoDB connection with status check
+async function connectDB() {
+  try {
+    const conn = await mongoose.connect(process.env.MONGO_URL);
+    console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
+    
+    // Add connection event listeners
+    mongoose.connection.on('error', err => {
+      console.error('❌ MongoDB connection error:', err);
+    });
+
+    mongoose.connection.on('disconnected', () => {
+      console.warn('⚠️ MongoDB disconnected');
+    });
+
+    mongoose.connection.on('reconnected', () => {
+      console.log('✅ MongoDB reconnected');
+    });
+
+  } catch (error) {
+    console.error('❌ Error connecting to MongoDB:', error.message);
     process.exit(1);
+  }
+}
+
+// Initialize connection
+connectDB();
+
+// Simple connection test endpoint
+app.get('/api/status', (req, res) => {
+  const dbState = mongoose.connection.readyState;
+  const states = {
+    0: "disconnected",
+    1: "connected",
+    2: "connecting",
+    3: "disconnecting",
+  };
+  res.json({
+    database: {
+      state: states[dbState],
+      host: mongoose.connection.host,
+      name: mongoose.connection.name
+    },
+    server: 'running'
   });
+});
 
 app.get('/', (req, res) => {
   res.send('API Running...');
@@ -33,6 +71,7 @@ app.get('/', (req, res) => {
 
 // Routes
 app.use('/api/documents', require('./routes/api/documents'));
+app.use('/api/auth', require('./routes/api/auth')); // Add this line
 
 // Error handling middleware
 app.use((err, req, res, next) => {

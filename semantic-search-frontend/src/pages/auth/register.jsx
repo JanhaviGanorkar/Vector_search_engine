@@ -2,6 +2,7 @@ import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { registerUser } from "@/lib/api"
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -19,12 +20,23 @@ export default function Register() {
       alert("Passwords don't match")
       return
     }
+    
     setIsLoading(true)
-    
-    // TODO: Add actual registration logic here
-    console.log("Register:", formData)
-    
-    setIsLoading(false)
+    try {
+      const result = await registerUser({
+        name: formData.name,
+        email: formData.email,
+        password: formData.password
+      })
+      console.log("Registration successful:", result)
+      // Redirect to login page
+      navigate('/login')
+    } catch (error) {
+      console.error("Registration failed:", error)
+      alert(error.message || 'Registration failed')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (

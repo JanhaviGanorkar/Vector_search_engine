@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom"; // Add useLocation
 import { Button } from "@/components/ui/button";
 import { Bell, Search, Home, Users, Info, Menu, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -14,6 +14,17 @@ const navigation = [
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const isLoggedIn = false; // Replace this with your real auth state
+  const location = useLocation(); // Add this hook
+
+  // Add this function to close menu
+  const handleNavigation = () => {
+    setIsOpen(false);
+  };
+
+  // Add effect to close menu on route change
+  React.useEffect(() => {
+    setIsOpen(false);
+  }, [location.pathname]);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -35,6 +46,7 @@ const Navbar = () => {
               <Link
                 key={item.name}
                 to={item.href}
+                onClick={handleNavigation}
                 className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition"
               >
                 <item.icon className="h-4 w-4" />
@@ -49,15 +61,15 @@ const Navbar = () => {
               <Search className="h-5 w-5" />
             </Button>
             {isLoggedIn ? (
-              <Button asChild>
+              <Button asChild onClick={handleNavigation}>
                 <Link to="/dashboard">Dashboard</Link>
               </Button>
             ) : (
               <>
-                <Button variant="ghost" asChild>
+                <Button variant="ghost" asChild onClick={handleNavigation}>
                   <Link to="/login">Log in</Link>
                 </Button>
-                <Button asChild>
+                <Button asChild onClick={handleNavigation}>
                   <Link to="/register">Sign up</Link>
                 </Button>
               </>
@@ -81,7 +93,7 @@ const Navbar = () => {
               <Link
                 key={item.name}
                 to={item.href}
-                onClick={() => setIsOpen(false)}
+                onClick={handleNavigation}
                 className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition"
               >
                 <item.icon className="h-4 w-4" />
@@ -91,15 +103,15 @@ const Navbar = () => {
 
             <div className="flex flex-col gap-2 mt-4">
               {isLoggedIn ? (
-                <Button asChild>
+                <Button asChild onClick={handleNavigation}>
                   <Link to="/dashboard">Dashboard</Link>
                 </Button>
               ) : (
                 <>
-                  <Button variant="outline" asChild>
+                  <Button variant="outline" asChild onClick={handleNavigation}>
                     <Link to="/login">Log in</Link>
                   </Button>
-                  <Button asChild>
+                  <Button asChild onClick={handleNavigation}>
                     <Link to="/register">Sign up</Link>
                   </Button>
                 </>

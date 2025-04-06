@@ -2,6 +2,7 @@ import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { loginUser } from "@/lib/api"
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -15,10 +16,17 @@ export default function Login() {
     e.preventDefault()
     setIsLoading(true)
     
-    // TODO: Add actual login logic here
-    console.log("Login:", formData)
-    
-    setIsLoading(false)
+    try {
+      const result = await loginUser(formData.email, formData.password)
+      console.log("Login successful:", result)
+      // Redirect to home page
+      navigate('/')
+    } catch (error) {
+      console.error("Login failed:", error)
+      alert(error.message || 'Login failed')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
