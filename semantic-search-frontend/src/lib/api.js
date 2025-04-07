@@ -8,11 +8,12 @@ async function searchDocuments(query) {
       body: JSON.stringify({ query }),
     });
 
-    const data = await response.json();
-
     if (!response.ok) {
-      throw new Error(data.message || 'Search failed');
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
+
+    const text = await response.text(); // Read response as text
+    const data = text ? JSON.parse(text) : {}; // Parse only if not empty
 
     return data;
   } catch (error) {
@@ -23,7 +24,7 @@ async function searchDocuments(query) {
 
 async function addDocument(title, content) {
   try {
-    const response = await fetch('/api/documents', {
+    const response = await fetch('http://localhost:5000/api/documents', { // Updated base URL
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
