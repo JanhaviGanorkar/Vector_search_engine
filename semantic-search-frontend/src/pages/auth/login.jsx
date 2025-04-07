@@ -19,8 +19,8 @@ export default function Login() {
     try {
       const result = await loginUser(formData.email, formData.password)
       console.log("Login successful:", result)
-      // Redirect to home page
-      navigate('/')
+      localStorage.setItem('isLoggedIn', 'true'); // Set login flag
+      navigate('/search'); // Redirect to search page
     } catch (error) {
       console.error("Login failed:", error)
       alert(error.message || 'Login failed')
@@ -75,3 +75,4 @@ export default function Login() {
     </div>
   )
 }
+

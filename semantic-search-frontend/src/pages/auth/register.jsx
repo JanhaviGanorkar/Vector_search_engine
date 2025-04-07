@@ -9,35 +9,40 @@ export default function Register() {
     name: "",
     email: "",
     password: "",
-    confirmPassword: "",
+    confirmPassword: "", // Ensure this is set as an empty string
   })
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
+  
+    console.log('Form Data before submit:', formData); // Log the form data before submitting
+  
     if (formData.password !== formData.confirmPassword) {
-      alert("Passwords don't match")
-      return
+      alert("Passwords don't match");
+      return;
     }
-    
-    setIsLoading(true)
+  
+    setIsLoading(true);
     try {
       const result = await registerUser({
         name: formData.name,
         email: formData.email,
-        password: formData.password
-      })
-      console.log("Registration successful:", result)
-      // Redirect to login page
-      navigate('/login')
+        password: formData.password,
+        confirmPassword: formData.confirmPassword, // Make sure confirmPassword is being passed
+      });
+      console.log("Registration successful:", result);
+      localStorage.setItem('isLoggedIn', 'true');
+      navigate('/search');
     } catch (error) {
-      console.error("Registration failed:", error)
-      alert(error.message || 'Registration failed')
+      console.error("Registration failed:", error);
+      alert(error.message || 'Registration failed');
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
+  
 
   return (
     <div className="container flex h-[80vh] w-full flex-col items-center justify-center">
@@ -87,7 +92,10 @@ export default function Register() {
               type="password"
               required
               value={formData.confirmPassword}
-              onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+              onChange={(e) => {
+                console.log("Confirm Password Updated:", e.target.value)
+                setFormData({ ...formData, confirmPassword: e.target.value })
+              }}
             />
           </div>
           <Button className="w-full" type="submit" disabled={isLoading}>

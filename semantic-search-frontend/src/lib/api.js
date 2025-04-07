@@ -1,3 +1,4 @@
+// Assuming you have the following API functions for login and registration
 async function searchDocuments(query) {
   try {
     const response = await fetch('http://localhost:5000/api/documents/search', { // Updated base URL
@@ -45,7 +46,7 @@ async function addDocument(title, content) {
 
 async function loginUser(email, password) {
   try {
-    const response = await fetch('/api/auth/login', {
+    const response = await fetch('http://localhost:5000/api/auth/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -64,7 +65,7 @@ async function loginUser(email, password) {
 
 async function registerUser(userData) {
   try {
-    const response = await fetch('/api/auth/register', {
+    const response = await fetch('http://localhost:5000/api/auth/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -81,4 +82,4 @@ async function registerUser(userData) {
   }
 }
 
-export { searchDocuments, addDocument, loginUser, registerUser };
+export { searchDocuments, addDocument, loginUser, registerUser }
