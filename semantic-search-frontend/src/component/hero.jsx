@@ -18,14 +18,14 @@ const HeroSection = () => {
           <div className="flex flex-wrap gap-4 justify-center pt-6">
             <a
               href="/get-started"
-              className="h-12 px-6 text-base inline-flex items-center justify-center bg-blue-600 text-white rounded-md hover:bg-blue-500 transition-all"
+              className="h-12 px-6 text-base inline-flex items-center justify-center bg-white text-black rounded-md hover:bg-white-700 transition-all"
             >
               Get Started
               <ArrowRight className="ml-2 h-5 w-5" />
             </a>
             <a
               href="/docs"
-              className="h-12 px-6 text-base inline-flex items-center justify-center border-2 border-blue-600 text-blue-400 rounded-md hover:bg-blue-900/20 transition-all"
+              className="h-12 px-6 text-base inline-flex items-center justify-center border-2 border-white text-white rounded-md hover:bg-blue-900/20  transition-all"
             >
               Read Docs
             </a>

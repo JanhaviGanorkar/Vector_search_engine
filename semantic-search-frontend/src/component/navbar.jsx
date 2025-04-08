@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation, NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Bell, Search, Home, Users, Info, Menu, X } from "lucide-react";
+import { Bell, Search, Home, Users, Info, Menu, Mail, X } from "lucide-react";
 
 
 const navigation = [
   { name: "Home", href: "/", icon: Home },
   { name: "Vector Search", href: "/search", icon: Search },
-  // { name: "Users", href: "/users", icon: Users },
   { name: "About", href: "/about", icon: Info },
+  { name: "Contact", href: "/contact", icon: Mail },
 ];
 
 // Adjusted logic for login/register buttons and navigation

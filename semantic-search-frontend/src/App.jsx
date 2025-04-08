@@ -9,7 +9,8 @@ import Search from '@/pages/search';
 import HeroSection from '@/component/hero';
 import Navbar from '@/component/navbar';
 import Footer from './component/footer';
-
+import ReadDocs from './pages/read-docs';
+import ContactForm from './component/contact';
 const isLoggedIn = () => localStorage.getItem('isLoggedIn') === 'true';
 
 const ProtectedRoute = ({ children }) => {
@@ -28,7 +29,8 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/privacy" element={<Privacy />} />
-
+        <Route path="/doc" element={<ReadDocs />} />
+        <Route path="/contact" element={<ContactForm/>}/>
         <Route path="/add-document" element={<ProtectedRoute><AddDocument /></ProtectedRoute>} />
         <Route path="/search" element={<ProtectedRoute><Search /></ProtectedRoute>} />
       </Routes>

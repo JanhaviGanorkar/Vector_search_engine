@@ -1,12 +1,14 @@
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
+import { Button } from "@/components/ui/button"; // Adjust the path based on your setup
+
 import Footer from './component/footer';
 
 export default function Layout() {
   const navigate = useNavigate();
-  const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
 
   const handleLogout = () => {
-    localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('isLoggedIn');
     navigate('/login');
   };
 
@@ -18,7 +20,7 @@ export default function Layout() {
           <nav className="flex space-x-4">
             <NavLink to="/" className={({ isActive }) => isActive ? 'underline' : 'hover:underline'}>Home</NavLink>
             <NavLink to="/search" className={({ isActive }) => isActive ? 'underline' : 'hover:underline'}>Search</NavLink>
-            {isAuthenticated ? (
+            {isLoggedIn ? (
               <>
                 <NavLink to="/add-document" className={({ isActive }) => isActive ? 'underline' : 'hover:underline'}>Add Document</NavLink>
                 <Button  onClick={handleLogout} className=" bg-white hover:underline">Logout</Button>
