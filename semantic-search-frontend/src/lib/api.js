@@ -1,12 +1,13 @@
 // Assuming you have the following API functions for login and registration
-async function searchDocuments(query) {
+// Updated the searchDocuments function to include pagination and filters
+async function searchDocuments(query, page = 1, limit = 10, filters = {}) {
   try {
-    const response = await fetch('http://localhost:5000/api/documents/search', { // Updated base URL
+    const response = await fetch('http://localhost:5000/api/documents/search', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ query }),
+      body: JSON.stringify({ query, page, limit, filters }),
     });
 
     if (!response.ok) {

@@ -17,11 +17,11 @@ export default function Search() {
     setResults([]);
 
     try {
-      const results = await searchDocuments(searchQuery);
-      if (results.length === 0) {
+      const { results: searchResults } = await searchDocuments(searchQuery);
+      if (!searchResults || searchResults.length === 0) {
         setError('No matching documents found');
       } else {
-        setResults(results);
+        setResults(searchResults);
       }
     } catch (err) {
       setError('Search failed. Please try again.');

@@ -11,15 +11,12 @@ const AddDocument = ({ onSuccess }) => {
     const formData = new FormData(e.target);
     const title = formData.get('title');
     const content = formData.get('content');
-  
-    console.log('Title:', title);  // Add this
-    console.log('Content:', content);  // Add this
-  
+
     if (!title.trim() || !content.trim()) {
       alert('Both title and content are required');
       return;
     }
-  
+
     try {
       await addDocument(title, content);
       e.target.reset();
@@ -28,7 +25,6 @@ const AddDocument = ({ onSuccess }) => {
       alert('Failed to add document: ' + err.message);
     }
   }
-  
 
   return (
     <form onSubmit={handleDocumentUpload} className="w-full max-w-lg space-y-4">

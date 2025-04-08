@@ -15,14 +15,12 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setIsLoading(true)
-    
+
     try {
       const result = await loginUser(formData.email, formData.password)
-      console.log("Login successful:", result)
-      localStorage.setItem('isLoggedIn', 'true'); // Set login flag
-      navigate('/search'); // Redirect to search page
+      localStorage.setItem('isLoggedIn', 'true');
+      navigate('/search');
     } catch (error) {
-      console.error("Login failed:", error)
       alert(error.message || 'Login failed')
     } finally {
       setIsLoading(false)
