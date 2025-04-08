@@ -72,32 +72,37 @@ router.post('/search', async (req, res) => {
       return res.status(400).json({ message: 'Query is required' });
     }
 
-    // Get vocabulary
+    // Get vocabulary for vector search
     const vocabulary = await getVocabulary();
-    
-    // Create query vector
     const queryVector = createVector(query, vocabulary.terms);
 
-    // Perform text search with vector similarity
-    const documents = await Document.find(
+    // MongoDB text search (full-text search)
+    const textSearchResults = await Document.find(
       { $text: { $search: query } },
       { score: { $meta: "textScore" } }
     ).sort({ score: { $meta: "textScore" } });
 
+    // Regex-based search for partial word matching
+    const regexSearchResults = await Document.find({
+      content: { $regex: query, $options: "i" } // Case-insensitive search
+    });
+
+    // Merge results (avoid duplicates)
+    const allResults = [...new Map([...textSearchResults, ...regexSearchResults].map(doc => [doc._id.toString(), doc])).values()];
+
     // Calculate vector similarities
-    const results = documents.map(doc => ({
+    const results = allResults.map(doc => ({
       ...doc.toObject(),
       similarity: cosineSimilarity(queryVector, doc.vector),
-      score: doc._doc.score // Include text search score
+      score: doc._doc.score || 0 // Include text search score
     }))
-    .filter(doc => doc.similarity > 0 || doc.score > 0)
+    .filter(doc => doc.similarity > 0 || doc.score > 0) // Filter relevant results
     .map(doc => ({
       ...doc,
-      // Combine text score and vector similarity
-      relevance: (doc.score || 0) + (doc.similarity || 0)
+      relevance: (doc.score || 0) + (doc.similarity || 0) // Combine text score & similarity
     }))
-    .sort((a, b) => b.relevance - a.relevance)
-    .slice(0, 10);
+    .sort((a, b) => b.relevance - a.relevance) // Sort by relevance
+    .slice(0, 10); // Limit results
 
     res.json(results);
   } catch (err) {
