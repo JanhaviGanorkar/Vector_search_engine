@@ -18,6 +18,9 @@ function createVector(text, vocabulary) {
   });
 }
 
+// Placeholder for FAISS or HNSW integration
+// Future optimization: Replace in-memory cosine similarity with FAISS or HNSW for large datasets.
+
 function cosineSimilarity(vecA, vecB) {
   const dotProduct = vecA.reduce((sum, a, i) => sum + a * vecB[i], 0);
   const magnitudeA = Math.sqrt(vecA.reduce((sum, a) => sum + a * a, 0));

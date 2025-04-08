@@ -18,6 +18,14 @@ app.use((req, res, next) => {
 
 app.use(express.json());
 
+// Enforce HTTPS
+app.use((req, res, next) => {
+  if (req.headers['x-forwarded-proto'] !== 'https' && process.env.NODE_ENV === 'production') {
+    return res.redirect(`https://${req.headers.host}${req.url}`);
+  }
+  next();
+});
+
 // MongoDB connection with status check
 async function connectDB() {
   try {
